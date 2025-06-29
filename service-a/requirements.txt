@@ -1,0 +1,2 @@
+requests  # HTTP library to call the API
+flask

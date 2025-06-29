@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+    spec:
+      containers:
+        - name: service-a
+          image: adinadler1/service-a:latest
+          ports:
+          - containerPort: 80
+          env:
+            - name: AVG_INTERVAL
+              value: "10"
+            - name: API_URL
+              value: "https://api.coinbase.com/v2/prices/BTC-USD/spot"
+            - name: DATA_PATH
+              value: "data.amount"
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/healthy
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/healthy
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            failureThreshold: 3
