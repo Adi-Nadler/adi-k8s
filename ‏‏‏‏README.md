@@ -48,7 +48,7 @@ kubectl logs deployment/service-a
 
 Service A is available publicly on Docker Hub:
 
-[text](https://hub.docker.com/r/adinadler1/service-a)
+[https://hub.docker.com/r/adinadler1/service-a](https://hub.docker.com/r/adinadler1/service-a)
 
 Image tag used in deployment: `adinadler1/service-a:latest`
 
@@ -65,8 +65,8 @@ Image tag used in deployment: `adinadler1/service-a:latest`
 
 ### 2. **Clone the Repository**
 ```bash
-git clone https://github.com/Adi-Nadler/aks-home-assignment.git
-cd aks-home-assignment
+git clone https://github.com/Adi-Nadler/adi-k8s.git
+cd adi-k8s
 ```
 
 ### 3. **Login to Azure and Set Variables**
