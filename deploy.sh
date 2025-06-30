@@ -13,6 +13,7 @@ VM_SIZE="Standard_B2s"
 if az group show --name $RESOURCE_GROUP &> /dev/null; then
   echo "Resource group '$RESOURCE_GROUP' already exists."
 else
+  echo "Creating resource group '$RESOURCE_GROUP'..."
   az group create --name $RESOURCE_GROUP --location $LOCATION
 fi
 
@@ -20,6 +21,7 @@ fi
 if az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME &> /dev/null; then
   echo "AKS cluster '$CLUSTER_NAME' already exists."
 else
+  echo "Creating AKS cluster '$CLUSTER_NAME'..."
   az aks create \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
@@ -29,9 +31,11 @@ else
 fi
 
 # Get kubeconfig
+echo "Configuring kubectl credentials..."
 az aks get-credentials -g $RESOURCE_GROUP -n $CLUSTER_NAME
 
 # Install nginx ingress controller
+echo "Installing NGINX ingress controller..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
 # Poll every 5 seconds, timeout after ~2 minutes
 for i in {1..24}; do
@@ -53,17 +57,21 @@ if [ "$READY" != "true" ]; then
 fi
 
 # Deploy Service A
+echo "Deploying Service A..."
 kubectl apply -f service-a/deployment.yaml
 kubectl apply -f service-a/service.yaml
 
 # Deploy Service B
+echo "Deploying Service B..."
 kubectl apply -f service-b/deployment.yaml
 kubectl apply -f service-b/service.yaml
 
 # Deploy Ingress
+echo "Applying ingress rules..."
 kubectl apply -f ingress/ingress.yaml
 
 # Apply Network Policy
+echo "Applying network policy..."
 kubectl apply -f network-policy.yaml
 
 echo ""
